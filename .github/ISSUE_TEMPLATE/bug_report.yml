@@ -1,0 +1,110 @@
+# SPDX-FileCopyrightText: 2026 Rupam Mondal
+# SPDX-License-Identifier: MIT
+
+name: Bug report
+description: Report a reproducible HydroSense ESP32-C3 problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Do not include passwords, keys, tokens or private information.
+
+  - type: input
+    id: version
+    attributes:
+      label: HydroSense version or commit
+      placeholder: "Example: v0.1.0 or commit hash"
+    validations:
+      required: true
+
+  - type: input
+    id: board
+    attributes:
+      label: ESP32-C3 board
+      placeholder: "Example: ESP32-C3 SuperMini"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      options:
+        - Build or upload
+        - DHT22
+        - DS18B20
+        - HC-SR04
+        - Reservoir calibration
+        - Analytics
+        - Data quality
+        - OLED
+        - Button
+        - BLE
+        - Serial terminal
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem description
+      description: Clearly describe what went wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Connect...
+        2. Build...
+        3. Upload...
+        4. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Build or Serial logs
+      description: Remove all credentials and private information.
+      render: shell
+
+  - type: textarea
+    id: wiring
+    attributes:
+      label: Wiring and hardware details
+      description: Describe power, ground, pins, pull-ups and voltage conversion.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I performed a clean PlatformIO build.
+          required: true
+        - label: I removed credentials and private information.
+          required: true
+        - label: This is not a confidential security vulnerability.
+          required: true

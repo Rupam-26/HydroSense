@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 Rupam Mondal
+# SPDX-License-Identifier: MIT
+
+# Normalize text files to LF line endings
+* text=auto eol=lf
+
+# Source files
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.ino text eol=lf
+
+# Configuration files
+*.ini text eol=lf
+*.json text eol=lf
+*.jsonc text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+
+# Documentation and licensing
+*.md text eol=lf
+*.cff text eol=lf
+LICENSE text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.zip binary
+*.bin binary
+*.elf binary
+*.hex binary

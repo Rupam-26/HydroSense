@@ -1,0 +1,112 @@
+{
+    "deviceId": "HydroSense_S3_01",
+    "database": "hydrosense",
+    "collection": "telemetries",
+    "records": 47,
+    "startUtc": "2026-08-25T22:08:49.879000+00:00",
+    "endUtc": "2026-08-28T17:33:49.228000+00:00",
+    "durationHours": 67.41648583333333,
+    "samplingIntervalSeconds": {
+        "median": 301.054,
+        "minimum": 90.168,
+        "maximum": 128459.714
+    },
+    "features": {
+        "airTemperatureC": {
+            "minimum": 30.9,
+            "maximum": 32.1,
+            "mean": 31.58085106382978,
+            "standardDeviation": 0.26835918327652547
+        },
+        "humidityPct": {
+            "minimum": 86.5,
+            "maximum": 93.7,
+            "mean": 90.19574468085106,
+            "standardDeviation": 1.7400596500031025
+        },
+        "waterTemperatureC": {
+            "minimum": 30.44,
+            "maximum": 33.25,
+            "mean": 31.062765957446814,
+            "standardDeviation": 0.3709371335910987
+        },
+        "stableDistanceCm": {
+            "minimum": 10.2,
+            "maximum": 394.2,
+            "mean": 177.2659574468085,
+            "standardDeviation": 116.13176413883562
+        },
+        "waterLevelPct": {
+            "minimum": 0.0,
+            "maximum": 0.0,
+            "mean": 0.0,
+            "standardDeviation": 0.0
+        },
+        "dewPointC": {
+            "minimum": 28.774,
+            "maximum": 30.954,
+            "mean": 29.772212765957438,
+            "standardDeviation": 0.409894256574324
+        },
+        "saturationVaporPressureKPa": {
+            "minimum": 4.467,
+            "maximum": 4.7817,
+            "mean": 4.6437723404255316,
+            "standardDeviation": 0.07040587828141381
+        },
+        "actualVaporPressureKPa": {
+            "minimum": 3.953,
+            "maximum": 4.4805,
+            "mean": 4.188570212765958,
+            "standardDeviation": 0.09824264529368887
+        },
+        "vpdKPa": {
+            "minimum": 0.3012,
+            "maximum": 0.6169,
+            "mean": 0.45519787234042564,
+            "standardDeviation": 0.0816939476481041
+        },
+        "absoluteHumidityGm3": {
+            "minimum": 28.136,
+            "maximum": 31.807,
+            "mean": 29.785297872340422,
+            "standardDeviation": 0.683970884038762
+        },
+        "airWaterDeltaC": {
+            "minimum": -1.45,
+            "maximum": 1.1,
+            "mean": 0.5180851063829788,
+            "standardDeviation": 0.38116319851710867
+        },
+        "absoluteAirWaterDeltaC": {
+            "minimum": 0.11,
+            "maximum": 1.45,
+            "mean": 0.5797872340425532,
+            "standardDeviation": 0.27581097309020497
+        },
+        "tdsPpm": {
+            "minimum": 1181.42,
+            "maximum": 1373.95,
+            "mean": 1285.0406382978724,
+            "standardDeviation": 37.55777534298529
+        },
+        "qualityScorePct": {
+            "minimum": 81.0,
+            "maximum": 100.0,
+            "mean": 94.29787234042553,
+            "standardDeviation": 4.671443746744782
+        }
+    },
+    "healthySelection": {
+        "acceptAll": true,
+        "fromUtc": null,
+        "toUtc": null
+    },
+    "important": [
+        "No missing values were fabricated.",
+        "No interpolation was performed.",
+        "No outlier clipping was performed.",
+        "Healthy label came from operator selection.",
+        "Isolation Forest score is not a probability."
+    ]
+}

@@ -1,0 +1,80 @@
+HYDROSENSE TDS MODEL PROVENANCE
+================================
+
+Copyright (c) 2026 Rupam Mondal
+SPDX-License-Identifier: MIT
+
+
+ACTIVE FIRMWARE MODEL
+---------------------
+
+Model name:
+Tiny_32_16_8
+
+Runtime format:
+Direct FP32 neural-network inference implemented in C++.
+
+Architecture:
+3 -> 32 -> 16 -> 8 -> 1
+
+Hidden activation:
+ReLU
+
+Output activation:
+Linear
+
+Parameters:
+801
+
+Input order:
+1. DHT_temp
+2. DHT_humidity
+3. water_temp
+
+Embedded FP32 weights:
+include/tinyml/HydroSense_TDS_FP32_weights.h
+
+SHA-256 of the FP32 weights header:
+e31733fdfc2cee7c1e303282d4ffd15715fb3f44ff035e1a83c391e8c7adeb31
+
+Preprocessing constants:
+include/tinyml/HydroSense_TDS_constants.h
+
+Recorded FP32 evaluation:
+MAE = 90.1565 ppm
+
+The firmware performs FP32 inference directly. It does not use TensorFlow,
+TensorFlow Lite, TensorFlow Lite Micro, INT8 inference, quantization, input
+clamping, or synthetic replacement values.
+
+
+TRAINING ARTIFACT
+-----------------
+
+Original training-model reference:
+models/HydroSense_TDS_TinyML.keras
+
+The original Keras training artifact is not included in this S3 firmware
+folder. Therefore, retraining and independent weight-export verification
+require the original training notebook, dataset and Keras model.
+
+
+HISTORICAL INT8 REFERENCE
+-------------------------
+
+Historical reference header:
+include/tinyml/HydroSense_TDS_INT8_model.h
+
+Embedded TFLite byte length:
+4,984 bytes
+
+SHA-256 of the reconstructed historical TFLite bytes:
+9f53de69c3cf83693a2ce5f317a876945e710958addd9c43dd910c4f6e79304e
+
+Recorded historical INT8 evaluation:
+MAE  = 90.6221 ppm
+RMSE = 140.1725 ppm
+R2   = 0.672303
+
+The historical INT8 header is retained only for research provenance and
+comparison. It is not included or executed by the active firmware.

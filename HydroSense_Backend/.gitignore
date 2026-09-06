@@ -1,0 +1,58 @@
+# ============================================================
+# HYDROSENSE BACKEND
+# ============================================================
+
+# Node.js dependencies
+node_modules/
+.npm/
+
+# Private environment files and credentials
+.env
+.env.*
+!.env.example
+
+# Runtime-generated ML models and training jobs
+ml_runtime/
+*.joblib
+*.pkl
+*.pickle
+
+# Python generated files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Test coverage
+coverage/
+htmlcov/
+.coverage
+.coverage.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Editor files
+.vscode/
+.idea/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini

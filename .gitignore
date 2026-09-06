@@ -1,0 +1,117 @@
+# SPDX-FileCopyrightText: 2026 Rupam Mondal
+# SPDX-License-Identifier: MIT
+
+# ============================================================
+# PLATFORMIO GENERATED FILES
+#
+# PlatformIO recreates these automatically during a build.
+# They contain machine-specific paths and downloaded libraries.
+# They are not required to rebuild or upload the firmware.
+# ============================================================
+
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# ============================================================
+# VISUAL STUDIO CODE
+#
+# Keep extensions.json because it recommends the PlatformIO
+# extension. Ignore machine-specific compiler and debugger data.
+# ============================================================
+
+.vscode/*
+!.vscode/extensions.json
+
+# ============================================================
+# COMPILER OBJECTS AND TEMPORARY BUILD OUTPUT
+# ============================================================
+
+*.o
+*.obj
+*.a
+*.lib
+*.d
+*.su
+*.map
+
+# ============================================================
+# GENERATED FIRMWARE IMAGES
+#
+# Verified firmware binaries can later be attached to numbered
+# GitHub Releases. They should not be repeatedly committed.
+# ============================================================
+
+*.bin
+*.elf
+*.hex
+
+# ============================================================
+# TEST AND COVERAGE OUTPUT
+# ============================================================
+
+coverage/
+test-results/
+junit.xml
+*.gcda
+*.gcno
+*.gcov
+
+# ============================================================
+# LOGS, CACHES AND TEMPORARY FILES
+# ============================================================
+
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*~
+.cache/
+
+# ============================================================
+# LOCAL SECRETS AND CREDENTIALS
+#
+# Never commit Wi-Fi credentials, passwords, API keys,
+# certificates, access tokens, or private keys.
+# ============================================================
+
+.env
+.env.*
+!.env.example
+
+secrets.h
+include/secrets.h
+credentials.h
+include/credentials.h
+
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ============================================================
+# OPERATING-SYSTEM GENERATED FILES
+# ============================================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+
+# ============================================================
+# OTHER IDE CONFIGURATION
+# ============================================================
+
+.idea/
+*.code-workspace
+
+# ============================================================
+# LOCAL PLATFORMIO OVERRIDES
+# ============================================================
+
+platformio_override.ini

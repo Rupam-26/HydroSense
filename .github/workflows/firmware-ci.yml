@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: 2026 Rupam Mondal
+# SPDX-License-Identifier: MIT
+
+name: HydroSense Firmware CI
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - "HydroSense_C3/**"
+      - "HydroSense_S3/**"
+      - ".github/workflows/firmware-ci.yml"
+
+  pull_request:
+    paths:
+      - "HydroSense_C3/**"
+      - "HydroSense_S3/**"
+      - ".github/workflows/firmware-ci.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  firmware-build:
+    name: Build ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: ESP32-C3
+            project_directory: HydroSense_C3
+            configure_s3: false
+
+          - name: ESP32-S3
+            project_directory: HydroSense_S3
+            configure_s3: true
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install PlatformIO
+        run: python -m pip install platformio
+
+      - name: Create safe S3 build configuration
+        if: ${{ matrix.configure_s3 }}
+        run: cp HydroSense_S3/include/config/S3Secrets.example.h HydroSense_S3/include/config/S3Secrets.h
+
+      - name: Build firmware
+        run: pio run --project-dir "${{ matrix.project_directory }}"

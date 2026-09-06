@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        HydroSense Realtime Test
+    </title>
+
+    <style>
+
+        body
+        {
+            font-family:
+                Arial,
+                sans-serif;
+
+            background:
+                #101418;
+
+            color:
+                #ffffff;
+
+            padding:
+                30px;
+        }
+
+        .status
+        {
+            font-size:
+                22px;
+
+            margin-bottom:
+                20px;
+        }
+
+        #connection
+        {
+            color:
+                #ffcc00;
+        }
+
+        pre
+        {
+            background:
+                #171d22;
+
+            padding:
+                20px;
+
+            border-radius:
+                10px;
+
+            min-height:
+                300px;
+
+            overflow:
+                auto;
+
+            font-size:
+                15px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>
+        HydroSense Real-Time Test
+    </h1>
+
+    <div class="status">
+
+        Socket:
+
+        <strong id="connection">
+            CONNECTING...
+        </strong>
+
+    </div>
+
+    <h2>
+        Latest Live Data
+    </h2>
+
+    <pre id="output">Waiting for HydroSense live telemetry...</pre>
+
+    <script
+        src="/socket.io/socket.io.js">
+    </script>
+
+    <script>
+
+        const connection =
+            document.getElementById(
+                "connection"
+            );
+
+        const output =
+            document.getElementById(
+                "output"
+            );
+
+        const socket =
+            io();
+
+        socket.on(
+            "connect",
+            () =>
+            {
+                connection.textContent =
+                    "CONNECTED";
+
+                connection.style.color =
+                    "#44dd88";
+            }
+        );
+
+        socket.on(
+            "disconnect",
+            () =>
+            {
+                connection.textContent =
+                    "DISCONNECTED";
+
+                connection.style.color =
+                    "#ff5555";
+            }
+        );
+
+        socket.on(
+            "hydrosense:live",
+            (data) =>
+            {
+                output.textContent =
+                    JSON.stringify(
+                        data,
+                        null,
+                        2
+                    );
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

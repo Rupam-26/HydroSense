@@ -1,0 +1,82 @@
+# SPDX-FileCopyrightText: 2026 Rupam Mondal
+# SPDX-License-Identifier: MIT
+
+name: Feature request
+description: Suggest an improvement for HydroSense ESP32-C3
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or need
+      description: Explain the problem this feature would solve.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the requested behavior.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      options:
+        - Sensor acquisition
+        - Filtering
+        - Environmental physics
+        - Reservoir processing
+        - Analytics
+        - Sensor health
+        - Data quality
+        - OLED interface
+        - Button input
+        - BLE protocol
+        - Serial terminal
+        - Build system
+        - Documentation
+        - Testing
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe other solutions you considered.
+
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware impact
+      description: List required hardware, pin, voltage or wiring changes.
+
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: Explain any effect on the ESP32-S3 receiver or 20-byte BLE protocol.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and feature requests.
+          required: true
+        - label: I understand that major changes require hardware testing.
+          required: true
+        - label: I have not included credentials or private information.
+          required: true

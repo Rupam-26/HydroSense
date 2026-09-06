@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07111d">
+    <title>HydroSense Control Room</title>
+    <link rel="stylesheet" href="/control-room/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">H</div>
+                <div>
+                    <div class="brand-name">HydroSense</div>
+                    <div class="brand-subtitle">Control Room</div>
+                </div>
+            </div>
+
+            <nav class="nav" aria-label="Control room sections">
+                <button class="nav-item active" data-view="overview">
+                    <span class="nav-icon">◫</span>
+                    <span>Overview</span>
+                </button>
+                <button class="nav-item" data-view="live">
+                    <span class="nav-icon">⌁</span>
+                    <span>Live Monitoring</span>
+                </button>
+                <button class="nav-item" data-view="history">
+                    <span class="nav-icon">◷</span>
+                    <span>History</span>
+                </button>
+                <button class="nav-item" data-view="ai">
+                    <span class="nav-icon">◇</span>
+                    <span>Edge AI</span>
+                </button>
+                <button class="nav-item" data-view="ml">
+                    <span class="nav-icon">⌬</span>
+                    <span>ML Control</span>
+                </button>
+                <button class="nav-item" data-view="trust">
+                    <span class="nav-icon">◎</span>
+                    <span>Sensor Trust</span>
+                </button>
+                <button class="nav-item" data-view="health">
+                    <span class="nav-icon">✚</span>
+                    <span>System Health</span>
+                </button>
+                <button class="nav-item" data-view="devices">
+                    <span class="nav-icon">▦</span>
+                    <span>Devices</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-status">
+                    <span class="status-dot unknown" id="sidebarBackendDot"></span>
+                    <div>
+                        <div class="sidebar-status-title" id="sidebarBackendText">Checking backend</div>
+                        <div class="sidebar-status-subtitle">HydroSense API</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+                    <div>
+                        <h1 id="viewTitle">System Overview</h1>
+                        <p id="viewSubtitle">Live state of the HydroSense hydroponics platform</p>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="live-clock">
+                        <span class="live-clock-label">Local time</span>
+                        <strong id="clock">--:--:--</strong>
+                    </div>
+
+                    <label class="device-picker">
+                        <span>Device</span>
+                        <select id="deviceSelect" aria-label="Select HydroSense device">
+                            <option value="">Discovering...</option>
+                        </select>
+                    </label>
+                </div>
+            </header>
+
+            <div class="banner hidden" id="connectionBanner" role="status"></div>
+
+            <!-- ===================================================== -->
+            <!-- OVERVIEW -->
+            <!-- ===================================================== -->
+            <section class="view active" id="view-overview">
+                <div class="hero-status panel">
+                    <div>
+                        <div class="eyebrow">HydroSense node</div>
+                        <div class="hero-device-line">
+                            <h2 id="overviewDeviceName">Waiting for device</h2>
+                            <span class="pill unknown" id="overviewDeviceStatus">UNKNOWN</span>
+                        </div>
+                        <p id="overviewLastSeen">No realtime packet received yet.</p>
+                    </div>
+
+                    <div class="chain-status" aria-label="System connection chain">
+                        <div class="chain-node">
+                            <span class="status-dot unknown" id="chainC3Dot"></span>
+                            <strong>C3</strong>
+                            <small id="chainC3Text">Unknown</small>
+                        </div>
+                        <div class="chain-link"></div>
+                        <div class="chain-node">
+                            <span class="status-dot unknown" id="chainBleDot"></span>
+                            <strong>BLE</strong>
+                            <small id="chainBleText">Unknown</small>
+                        </div>
+                        <div class="chain-link"></div>
+                        <div class="chain-node">
+                            <span class="status-dot unknown" id="chainS3Dot"></span>
+                            <strong>S3</strong>
+                            <small id="chainS3Text">Unknown</small>
+                        </div>
+                        <div class="chain-link"></div>
+                        <div class="chain-node">
+                            <span class="status-dot unknown" id="chainWifiDot"></span>
+                            <strong>Wi-Fi</strong>
+                            <small id="chainWifiText">Unknown</small>
+                        </div>
+                        <div class="chain-link"></div>
+                        <div class="chain-node">
+                            <span class="status-dot unknown" id="chainApiDot"></span>
+                            <strong>API</strong>
+                            <small id="chainApiText">Unknown</small>
+                        </div>
+                        <div class="chain-link"></div>
+                        <div class="chain-node">
+                            <span class="status-dot unknown" id="chainDbDot"></span>
+                            <strong>MongoDB</strong>
+                            <small id="chainDbText">Unknown</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-grid">
+                    <article class="metric-card">
+                        <div class="metric-header">
+                            <span>Air temperature</span>
+                            <span class="sensor-state unknown" id="airTemperatureState">NO DATA</span>
+                        </div>
+                        <div class="metric-value"><span id="airTemperature">--</span><small>°C</small></div>
+                        <div class="metric-meta">DHT22 environmental sensor</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-header">
+                            <span>Humidity</span>
+                            <span class="sensor-state unknown" id="humidityState">NO DATA</span>
+                        </div>
+                        <div class="metric-value"><span id="humidity">--</span><small>%</small></div>
+                        <div class="metric-meta">Relative air humidity</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-header">
+                            <span>Water temperature</span>
+                            <span class="sensor-state unknown" id="waterTemperatureState">NO DATA</span>
+                        </div>
+                        <div class="metric-value"><span id="waterTemperature">--</span><small>°C</small></div>
+                        <div class="metric-meta">DS18B20 reservoir probe</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-header">
+                            <span>Water level</span>
+                            <span class="sensor-state unknown" id="waterLevelState">NO DATA</span>
+                        </div>
+                        <div class="metric-value"><span id="waterLevel">--</span><small>%</small></div>
+                        <div class="metric-meta">Calibrated ultrasonic reservoir level</div>
+                    </article>
+                </div>
+
+                <div class="overview-grid">
+                    <article class="panel reservoir-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Reservoir</div>
+                                <h3>Live water level</h3>
+                            </div>
+                            <span class="panel-caption" id="distanceCaption">Distance -- cm</span>
+                        </div>
+
+                        <div class="reservoir-layout">
+                            <div class="tank-wrap">
+                                <div class="tank">
+                                    <div class="tank-water" id="tankWater"></div>
+                                    <div class="tank-grid"></div>
+                                    <div class="tank-label"><span id="tankLevelLabel">--</span>%</div>
+                                </div>
+                            </div>
+
+                            <div class="reservoir-stats">
+                                <div class="stat-row">
+                                    <span>Level validity</span>
+                                    <strong id="reservoirValidity">UNKNOWN</strong>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Stable distance</span>
+                                    <strong><span id="stableDistance">--</span> cm</strong>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Calibration</span>
+                                    <strong id="calibrationStatus">UNKNOWN</strong>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Packet age</span>
+                                    <strong><span id="packetAge">--</span> ms</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel ai-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Edge AI</div>
+                                <h3>TinyML TDS soft sensor</h3>
+                            </div>
+                            <span class="pill unknown" id="tdsStatus">UNKNOWN</span>
+                        </div>
+
+                        <div class="tds-main">
+                            <span id="tdsValue">--</span>
+                            <small>ppm</small>
+                        </div>
+
+                        <div class="ai-details">
+                            <div>
+                                <span>Model</span>
+                                <strong id="tdsModel">--</strong>
+                            </div>
+                            <div>
+                                <span>Inference</span>
+                                <strong><span id="inferenceMicros">--</span> µs</strong>
+                            </div>
+                            <div>
+                                <span>Input validity</span>
+                                <strong id="tdsInputValidity">UNKNOWN</strong>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel quality-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Trust layer</div>
+                                <h3>Data quality</h3>
+                            </div>
+                            <span class="quality-big"><span id="qualityScore">--</span>%</span>
+                        </div>
+
+                        <div class="quality-track">
+                            <div class="quality-fill" id="qualityFill"></div>
+                        </div>
+
+                        <div class="quality-grid">
+                            <div><span>Flags</span><strong id="qualityFlags">--</strong></div>
+                            <div><span>CRC failures</span><strong id="crcFailures">--</strong></div>
+                            <div><span>Wrong lengths</span><strong id="wrongLengths">--</strong></div>
+                            <div><span>Queue drops</span><strong id="queueDrops">--</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="panel physics-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Derived environment</div>
+                                <h3>Physics features</h3>
+                            </div>
+                        </div>
+
+                        <div class="physics-grid">
+                            <div><span>Dew point</span><strong><span id="dewPoint">--</span> °C</strong></div>
+                            <div><span>VPD</span><strong><span id="vpd">--</span> kPa</strong></div>
+                            <div><span>Abs. humidity</span><strong><span id="absoluteHumidity">--</span> g/m³</strong></div>
+                            <div><span>Air-water ΔT</span><strong><span id="airWaterDelta">--</span> °C</strong></div>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="panel chart-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <div class="eyebrow">Realtime stream</div>
+                            <h3>Recent environmental trend</h3>
+                        </div>
+                        <span class="panel-caption">Socket.IO · current browser session</span>
+                    </div>
+                    <div class="chart-container chart-large">
+                        <canvas id="overviewChart"></canvas>
+                        <div class="chart-empty" id="overviewChartEmpty">Waiting for realtime samples…</div>
+                    </div>
+                    <div class="chart-legend">
+                        <span><i class="legend-line line-air"></i>Air °C</span>
+                        <span><i class="legend-line line-water"></i>Water °C</span>
+                        <span><i class="legend-line line-humidity"></i>Humidity %</span>
+                        <span><i class="legend-line line-level"></i>Water level %</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- LIVE MONITORING -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-live">
+                <div class="section-grid two-col">
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Socket.IO</div>
+                                <h3>Live sensor stream</h3>
+                            </div>
+                            <span class="pill unknown" id="liveSocketStatus">CONNECTING</span>
+                        </div>
+                        <div class="chart-container chart-xl"><canvas id="liveEnvironmentChart"></canvas><div class="chart-empty" id="liveEnvironmentEmpty">Waiting for live data…</div></div>
+                        <div class="chart-legend">
+                            <span><i class="legend-line line-air"></i>Air temperature</span>
+                            <span><i class="legend-line line-water"></i>Water temperature</span>
+                            <span><i class="legend-line line-humidity"></i>Humidity</span>
+                        </div>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Reservoir + AI</div>
+                                <h3>Live level and TDS</h3>
+                            </div>
+                            <span class="panel-caption" id="liveSequence">Sequence --</span>
+                        </div>
+                        <div class="chart-container chart-xl"><canvas id="liveReservoirChart"></canvas><div class="chart-empty" id="liveReservoirEmpty">Waiting for live data…</div></div>
+                        <div class="chart-legend">
+                            <span><i class="legend-line line-level"></i>Water level %</span>
+                            <span><i class="legend-line line-tds"></i>TDS ppm</span>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="panel raw-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <div class="eyebrow">Diagnostics</div>
+                            <h3>Latest validated S3 payload</h3>
+                        </div>
+                        <button class="ghost-button" id="copyPayloadButton">Copy JSON</button>
+                    </div>
+                    <pre id="rawPayload">No realtime payload received.</pre>
+                </article>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- HISTORY -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-history">
+                <article class="panel">
+                    <div class="history-toolbar">
+                        <div>
+                            <div class="eyebrow">MongoDB Atlas</div>
+                            <h3>Historical telemetry</h3>
+                        </div>
+                        <div class="range-buttons" id="historyRanges">
+                            <button data-hours="1">1H</button>
+                            <button data-hours="6">6H</button>
+                            <button class="active" data-hours="24">24H</button>
+                            <button data-hours="168">7D</button>
+                            <button data-hours="720">30D</button>
+                        </div>
+                    </div>
+
+                    <div class="history-summary-grid">
+                        <div class="summary-card"><span>Samples</span><strong id="historySamples">--</strong></div>
+                        <div class="summary-card"><span>Air avg</span><strong><span id="historyAirAvg">--</span> °C</strong></div>
+                        <div class="summary-card"><span>Water avg</span><strong><span id="historyWaterAvg">--</span> °C</strong></div>
+                        <div class="summary-card"><span>Humidity avg</span><strong><span id="historyHumidityAvg">--</span> %</strong></div>
+                        <div class="summary-card"><span>Level avg</span><strong><span id="historyLevelAvg">--</span> %</strong></div>
+                        <div class="summary-card"><span>TDS avg</span><strong><span id="historyTdsAvg">--</span> ppm</strong></div>
+                    </div>
+
+                    <div class="history-loading hidden" id="historyLoading">Loading real MongoDB history…</div>
+
+                    <div class="chart-container chart-xl"><canvas id="historyEnvironmentChart"></canvas><div class="chart-empty" id="historyEnvironmentEmpty">No historical samples in this window.</div></div>
+                    <div class="chart-legend">
+                        <span><i class="legend-line line-air"></i>Air °C</span>
+                        <span><i class="legend-line line-water"></i>Water °C</span>
+                        <span><i class="legend-line line-humidity"></i>Humidity %</span>
+                    </div>
+
+                    <div class="chart-container chart-xl history-second-chart"><canvas id="historyReservoirChart"></canvas><div class="chart-empty" id="historyReservoirEmpty">No historical samples in this window.</div></div>
+                    <div class="chart-legend">
+                        <span><i class="legend-line line-level"></i>Water level %</span>
+                        <span><i class="legend-line line-tds"></i>TDS ppm</span>
+                        <span><i class="legend-line line-vpd"></i>VPD kPa</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- EDGE AI -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-ai">
+                <div class="ai-page-grid">
+                    <article class="panel ai-focus-card">
+                        <div class="eyebrow">On-device inference</div>
+                        <h3>TinyML TDS soft sensor</h3>
+                        <div class="ai-orb">
+                            <div class="ai-orb-value"><span id="aiPageTds">--</span><small>ppm</small></div>
+                        </div>
+                        <span class="pill unknown" id="aiPageStatus">UNKNOWN</span>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-heading"><div><div class="eyebrow">Model runtime</div><h3>Inference state</h3></div></div>
+                        <div class="detail-list">
+                            <div><span>Model</span><strong id="aiPageModel">--</strong></div>
+                            <div><span>Model output valid</span><strong id="aiPageValid">UNKNOWN</strong></div>
+                            <div><span>Environmental features</span><strong id="aiEnvironmentValid">UNKNOWN</strong></div>
+                            <div><span>Thermal features</span><strong id="aiThermalValid">UNKNOWN</strong></div>
+                            <div><span>Inference latency</span><strong><span id="aiPageInference">--</span> µs</strong></div>
+                            <div><span>Source sequence</span><strong id="aiPageSequence">--</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="panel ai-explain-card">
+                        <div class="panel-heading"><div><div class="eyebrow">Input chain</div><h3>What feeds the estimate</h3></div></div>
+                        <div class="flow-list">
+                            <div><span>1</span><strong>Real C3 sensor snapshot</strong><small>DHT22, DS18B20 and reservoir measurements</small></div>
+                            <div><span>2</span><strong>S3 feature engineering</strong><small>Validated environmental and thermal features</small></div>
+                            <div><span>3</span><strong>TinyML inference</strong><small>On-device FP32 soft-sensor model</small></div>
+                            <div><span>4</span><strong>Control-room telemetry</strong><small>Estimate is transmitted with validity and model status</small></div>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="panel">
+                    <div class="panel-heading"><div><div class="eyebrow">Realtime inference</div><h3>TDS trend</h3></div></div>
+                    <div class="chart-container chart-xl"><canvas id="aiTdsChart"></canvas><div class="chart-empty" id="aiTdsEmpty">Waiting for valid TinyML estimates…</div></div>
+                </article>
+            </section>
+
+
+            <!-- ===================================================== -->
+            <!-- ML CONTROL -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-ml">
+                <article class="panel ml-hero">
+                    <div>
+                        <div class="eyebrow">Research intelligence control</div>
+                        <h3>Baseline, Isolation Forest and anomaly orchestration</h3>
+                        <p class="ml-description">All values on this page come from the live S3 stream, MongoDB historical telemetry, user-entered reservoir geometry, or trained model artifacts. The Control Room does not fabricate missing measurements or invent an anomaly probability.</p>
+                    </div>
+                    <div class="ml-hero-statuses">
+                        <span class="pill unknown" id="mlStorageState">MONGODB UNKNOWN</span>
+                        <span class="pill unknown" id="mlBaselineState">BASELINE NOT STARTED</span>
+                        <span class="pill unknown" id="mlModelState">MODEL NOT TRAINED</span>
+                    </div>
+                </article>
+
+                <div class="ml-grid ml-grid-two">
+                    <article class="panel ml-card">
+                        <div class="panel-heading">
+                            <div><div class="eyebrow">Reservoir model</div><h3>Geometry + ultrasonic calibration</h3></div>
+                            <span class="pill unknown" id="mlGeometryState">UNCONFIGURED</span>
+                        </div>
+                        <p class="ml-description">Geometry is supplied by you, not guessed. It is used to validate ultrasonic distance and optionally derive water level or volume for ML features.</p>
+                        <div class="ml-form-grid">
+                            <label><span>Shape</span><select id="mlReservoirShape">
+                                <option value="UNCONFIGURED">Not configured</option>
+                                <option value="RECTANGULAR">Rectangular tank</option>
+                                <option value="VERTICAL_CYLINDER">Vertical drum / cylinder</option>
+                                <option value="DEPTH_ONLY">Depth only</option>
+                            </select></label>
+                            <label><span>Reservoir height (cm)</span><input id="mlReservoirHeight" type="number" step="any" min="0"></label>
+                            <label class="ml-rect-field"><span>Length (cm)</span><input id="mlReservoirLength" type="number" step="any" min="0"></label>
+                            <label class="ml-rect-field"><span>Width (cm)</span><input id="mlReservoirWidth" type="number" step="any" min="0"></label>
+                            <label class="ml-cylinder-field"><span>Diameter (cm)</span><input id="mlReservoirDiameter" type="number" step="any" min="0"></label>
+                            <label><span>Distance when FULL (cm)</span><input id="mlFullDistance" type="number" step="any" min="0"></label>
+                            <label><span>Distance when EMPTY (cm)</span><input id="mlEmptyDistance" type="number" step="any" min="0"></label>
+                        </div>
+                        <div class="ml-geometry-preview">
+                            <div><span>Current sensor distance</span><strong id="mlCurrentDistance">--</strong></div>
+                            <div><span>Geometry-derived level</span><strong id="mlGeometryLevel">--</strong></div>
+                            <div><span>Estimated water volume</span><strong id="mlGeometryVolume">--</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="panel ml-card">
+                        <div class="panel-heading">
+                            <div><div class="eyebrow">Healthy data acquisition</div><h3>Baseline collection policy</h3></div>
+                            <button class="ghost-button" id="mlSaveConfigButton">Save configuration</button>
+                        </div>
+                        <div class="ml-form-grid">
+                            <label><span>Target baseline duration (hours)</span><input id="mlTargetHours" type="number" step="any" min="0"></label>
+                            <label><span>Minimum storage coverage (%)</span><input id="mlMinCoverage" type="number" step="any" min="0" max="100"></label>
+                            <label><span>Maximum gap multiplier</span><input id="mlGapMultiplier" type="number" step="any" min="1"></label>
+                            <label><span>Robust Z warning threshold</span><input id="mlRobustZ" type="number" step="any" min="0"></label>
+                            <label><span>Sustained strange samples</span><input id="mlStrangeSamples" type="number" step="1" min="2"></label>
+                            <label><span>Missing-data warning after (s)</span><input id="mlMissingSeconds" type="number" step="any" min="0"></label>
+                            <label><span>Unchanged-data warning after (s)</span><input id="mlUnchangedSeconds" type="number" step="any" min="0"></label>
+                            <label><span>Calibration samples / class</span><input id="mlCalibrationSamples" type="number" step="1" min="1"></label>
+                            <label><span>Isolation Forest trees</span><input id="mlTrees" type="number" step="1" min="50"></label>
+                            <label><span>Chronological train fraction</span><input id="mlTrainFraction" type="number" step="0.01" min="0.01" max="0.99"></label>
+                            <label><span>Reproducibility seed</span><input id="mlRandomState" type="number" step="1"></label>
+                        </div>
+
+                        <div class="ml-feature-box">
+                            <span class="ml-field-label">Isolation Forest features</span>
+                            <div class="ml-feature-grid" id="mlFeatureGrid"></div>
+                        </div>
+
+                        <p class="ml-footnote">These are algorithm settings, not hidden crop or sensor limits. Change them deliberately and the saved configuration is snapshotted into each new baseline session.</p>
+                    </article>
+                </div>
+
+                <article class="panel ml-card ml-baseline-card">
+                    <div class="panel-heading">
+                        <div><div class="eyebrow">MongoDB baseline</div><h3>What is actually being stored</h3></div>
+
+                        <div class="ml-actions">
+                            <button class="ghost-button" id="mlStartBaselineButton">Start baseline</button>
+                            <button class="ghost-button" id="mlStopBaselineButton">Stop baseline</button>
+                            <button class="ghost-button danger" id="mlAbortBaselineButton">Abort baseline</button>
+                        </div>
+                    </div>
+
+                    <div class="ml-storage-grid">
+                        <div class="ml-stat"><span>Stored in current session</span><strong id="mlStoredSamples">--</strong><small>MongoDB records</small></div>
+                        <div class="ml-stat"><span>Complete model records</span><strong id="mlCompleteSamples">--</strong><small>selected features available</small></div>
+                        <div class="ml-stat"><span>Estimated required samples</span><strong id="mlRequiredSamples">--</strong><small>derived from real storage cadence</small></div>
+                        <div class="ml-stat"><span>Coverage</span><strong id="mlCoverage">--</strong><small id="mlCoverageDetail">waiting for cadence</small></div>
+                        <div class="ml-stat"><span>Elapsed / target</span><strong id="mlElapsed">--</strong><small id="mlDurationDetail">not configured</small></div>
+                        <div class="ml-stat"><span>Observed median cadence</span><strong id="mlCadence">--</strong><small>MongoDB storage interval</small></div>
+                    </div>
+
+                    <div class="ml-progress"><i id="mlBaselineProgress"></i></div>
+
+                    <div class="ml-storage-live-grid">
+                        <div>
+                            <div class="ml-subheading">Current realtime packet</div>
+                            <div class="ml-live-sample" id="mlLiveSample">Waiting for S3 realtime data.</div>
+                        </div>
+
+                        <div>
+                            <div class="ml-subheading">Latest MongoDB historical record</div>
+                            <div class="ml-live-sample" id="mlStoredSample">Waiting for stored telemetry.</div>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="ml-grid ml-grid-two">
+                    <article class="panel ml-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Universal data integrity</div>
+                                <h3>Warnings and blockers</h3>
+                            </div>
+                            <span class="pill unknown" id="mlWarningCount">NO WARNINGS</span>
+                        </div>
+
+                        <div class="ml-warning-list" id="mlWarningList">
+                            <div class="trust-anomaly-empty">No baseline or realtime warnings have been evaluated yet.</div>
+                        </div>
+                    </article>
+
+                    <article class="panel ml-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Feature audit</div>
+                                <h3>Baseline behaviour by selected feature</h3>
+                            </div>
+                        </div>
+
+                        <div class="device-table-wrap">
+                            <table class="device-table ml-feature-table">
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>Finite</th>
+                                        <th>Distinct</th>
+                                        <th>Range</th>
+                                        <th>Robust outliers</th>
+                                        <th>Longest repeat</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mlFeatureAuditBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-table">No baseline analysis yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="ml-grid ml-model-grid">
+                    <article class="panel ml-card ml-model-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">ML Model 1 · ESP32-S3</div>
+                                <h3>TinyML TDS soft sensor</h3>
+                            </div>
+                            <span class="pill unknown" id="mlTinymlState">WAITING</span>
+                        </div>
+
+                        <div class="ml-model-value">
+                            <span id="mlTinymlTds">--</span>
+                            <small>ppm</small>
+                        </div>
+
+                        <div class="detail-list">
+                            <div><span>Model</span><strong id="mlTinymlName">--</strong></div>
+                            <div><span>Inference latency</span><strong id="mlTinymlLatency">--</strong></div>
+                            <div><span>Control mode</span><strong>EDGE FIRMWARE</strong></div>
+                        </div>
+
+                        <p class="ml-footnote">The website observes this embedded model. It does not pretend to retrain or replace S3 firmware without an OTA/command channel.</p>
+                    </article>
+
+                    <article class="panel ml-card ml-model-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">ML Model 2 · Server</div>
+                                <h3>Isolation Forest healthy-behaviour model</h3>
+                            </div>
+                            <span class="pill unknown" id="mlIsolationState">NOT TRAINED</span>
+                        </div>
+
+                        <div class="ml-model-value">
+                            <span id="mlDecisionScore">--</span>
+                            <small>decision score</small>
+                        </div>
+
+                        <div class="detail-list">
+                            <div><span>Version</span><strong id="mlModelVersion">--</strong></div>
+                            <div><span>Training samples</span><strong id="mlModelSamples">--</strong></div>
+                            <div><span>Threshold</span><strong id="mlThresholdState">NOT CALIBRATED</strong></div>
+                            <div><span>Live classification</span><strong id="mlClassification">--</strong></div>
+                        </div>
+
+                        <button class="primary-button" id="mlTrainButton" disabled>
+                            Train Isolation Forest
+                        </button>
+
+                        <div class="ml-training-status" id="mlTrainingStatus">
+                            Training is locked until the baseline passes every configured eligibility check.
+                        </div>
+                    </article>
+
+                    <article class="panel ml-card ml-model-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Edge anomaly engine</div>
+                                <h3>S3 rule/physics anomaly evidence</h3>
+                            </div>
+                            <span class="pill unknown" id="mlEdgeAnomalyState">WAITING</span>
+                        </div>
+
+                        <div class="ml-model-value">
+                            <span id="mlEdgeEvidence">--</span>
+                            <small>/ 100 evidence</small>
+                        </div>
+
+                        <div class="detail-list">
+                            <div><span>Baseline</span><strong id="mlEdgeBaseline">--</strong></div>
+                            <div><span>Condition</span><strong id="mlEdgeCondition">--</strong></div>
+                            <div><span>Control mode</span><strong>EDGE OBSERVATION</strong></div>
+                        </div>
+
+                        <p class="ml-footnote">This is the S3 anomaly layer already transmitted in realtime. It remains separate from the server Isolation Forest so evidence is never silently merged or renamed as probability.</p>
+                    </article>
+                </div>
+
+                <div class="ml-grid ml-grid-two">
+                    <article class="panel ml-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Controlled validation</div>
+                                <h3>Labelled experiment capture</h3>
+                            </div>
+                            <span class="pill unknown" id="mlExperimentState">NO ACTIVE EXPERIMENT</span>
+                        </div>
+
+                        <div class="ml-form-grid">
+                            <label>
+                                <span>Experiment label</span>
+                                <select id="mlExperimentLabel">
+                                    <option value="HEALTHY_CONTROL">Healthy control</option>
+                                    <option value="SENSOR_DISCONNECT">Sensor disconnect</option>
+                                    <option value="STUCK_OUTPUT">Stuck output</option>
+                                    <option value="EXCESSIVE_NOISE">Excessive noise</option>
+                                    <option value="SUDDEN_PERTURBATION">Sudden perturbation</option>
+                                    <option value="PROBE_DEGRADATION">Probe degradation</option>
+                                    <option value="OTHER_FAULT">Other controlled fault</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                <span>Operator note</span>
+                                <input id="mlExperimentNote" type="text" placeholder="Describe what you physically changed">
+                            </label>
+                        </div>
+
+                        <div class="ml-actions">
+                            <button class="ghost-button" id="mlStartExperimentButton">Start experiment</button>
+                            <button class="ghost-button" id="mlStopExperimentButton">Stop experiment</button>
+                        </div>
+
+                        <p class="ml-footnote">Experiment samples are stored only while you explicitly run a labelled experiment. Missing model inputs remain unscorable and are recorded as such.</p>
+                    </article>
+
+                    <article class="panel ml-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Threshold calibration</div>
+                                <h3>Convert score into anomaly decision</h3>
+                            </div>
+                            <span class="pill unknown" id="mlCalibrationState">NOT CALIBRATED</span>
+                        </div>
+
+                        <p class="ml-description">The system will not invent an alarm threshold from healthy data alone. Calibration is enabled only after sufficient scored healthy-control and fault experiment samples exist under your configured minimum.</p>
+
+                        <div class="ml-storage-grid ml-calibration-grid">
+                            <div class="ml-stat">
+                                <span>Healthy experiment samples</span>
+                                <strong id="mlHealthyExperimentSamples">--</strong>
+                            </div>
+
+                            <div class="ml-stat">
+                                <span>Fault experiment samples</span>
+                                <strong id="mlFaultExperimentSamples">--</strong>
+                            </div>
+
+                            <div class="ml-stat">
+                                <span>Configured minimum / class</span>
+                                <strong id="mlCalibrationMinimum">--</strong>
+                            </div>
+                        </div>
+
+                        <button class="primary-button" id="mlCalibrateButton" disabled>
+                            Calibrate threshold from labels
+                        </button>
+                    </article>
+                </div>
+
+                <article class="panel ml-card">
+                    <div class="panel-heading">
+                        <div>
+                            <div class="eyebrow">Model registry</div>
+                            <h3>Isolation Forest versions</h3>
+                        </div>
+
+                        <button class="ghost-button" id="mlRefreshButton">
+                            Refresh ML Control
+                        </button>
+                    </div>
+
+                    <div class="device-table-wrap">
+                        <table class="device-table">
+                            <thead>
+                                <tr>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                    <th>Features</th>
+                                    <th>Train / validation</th>
+                                    <th>Threshold</th>
+                                    <th>Created</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="mlModelTableBody">
+                                <tr>
+                                    <td colspan="7" class="empty-table">No model artifacts yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SENSOR TRUST -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-trust">
+                <article class="panel trust-hero">
+                    <div class="trust-hero-main">
+                        <div>
+                            <div class="eyebrow">Cross-layer reliability inference</div>
+                            <h3>Overall Sensor Trust</h3>
+                            <p class="trust-explainer">A valid numerical reading is not automatically treated as trustworthy. HydroSense combines measurement integrity, data quality, temporal behaviour, learned healthy behaviour and C3-to-S3 communication evidence.</p>
+                        </div>
+
+                        <div class="trust-score-orb">
+                            <strong id="trustOverallScore">--</strong>
+                            <span>/ 100</span>
+                        </div>
+                    </div>
+
+                    <div class="trust-hero-status">
+                        <span class="pill unknown" id="trustOverallState">WAITING FOR SENSOR TRUST</span>
+                        <div class="trust-hero-stat"><span>Evidence coverage</span><strong><span id="trustOverallCoverage">--</span>%</strong></div>
+                        <div class="trust-hero-stat"><span>C3-to-S3 communication integrity</span><strong><span id="trustCommunicationIntegrity">--</span>%</strong></div>
+                        <div class="trust-hero-stat"><span>Healthy-behaviour baseline</span><strong id="trustBaselineState">WAITING</strong></div>
+                    </div>
+                </article>
+
+                <div class="trust-sensor-grid">
+                    <article class="panel trust-sensor-card" data-trust-sensor="airTemperature">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">DHT22</div>
+                                <h3>Air Temperature Sensor</h3>
+                            </div>
+                            <span class="pill unknown" id="trustAirState">WAITING</span>
+                        </div>
+
+                        <div class="trust-sensor-score">
+                            <span id="trustAirScore">--</span>
+                            <small>/ 100 trust</small>
+                        </div>
+
+                        <p class="trust-reason" id="trustAirReason">Waiting for Sensor Trust evidence.</p>
+
+                        <div class="trust-components">
+                            <div><span>Measurement integrity</span><strong id="trustAirMeasurement">--</strong><i><b id="trustAirMeasurementBar"></b></i></div>
+                            <div><span>Upstream data quality</span><strong id="trustAirQuality">--</strong><i><b id="trustAirQualityBar"></b></i></div>
+                            <div><span>Temporal reliability</span><strong id="trustAirTemporal">--</strong><i><b id="trustAirTemporalBar"></b></i></div>
+                            <div><span>Learned behaviour consistency</span><strong id="trustAirLearned">--</strong><i><b id="trustAirLearnedBar"></b></i></div>
+                            <div><span>Communication integrity</span><strong id="trustAirCommunication">--</strong><i><b id="trustAirCommunicationBar"></b></i></div>
+                        </div>
+                    </article>
+
+                    <article class="panel trust-sensor-card" data-trust-sensor="humidity">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">DHT22</div>
+                                <h3>Humidity Sensor</h3>
+                            </div>
+                            <span class="pill unknown" id="trustHumidityState">WAITING</span>
+                        </div>
+
+                        <div class="trust-sensor-score">
+                            <span id="trustHumidityScore">--</span>
+                            <small>/ 100 trust</small>
+                        </div>
+
+                        <p class="trust-reason" id="trustHumidityReason">Waiting for Sensor Trust evidence.</p>
+
+                        <div class="trust-components">
+                            <div><span>Measurement integrity</span><strong id="trustHumidityMeasurement">--</strong><i><b id="trustHumidityMeasurementBar"></b></i></div>
+                            <div><span>Upstream data quality</span><strong id="trustHumidityQuality">--</strong><i><b id="trustHumidityQualityBar"></b></i></div>
+                            <div><span>Temporal reliability</span><strong id="trustHumidityTemporal">--</strong><i><b id="trustHumidityTemporalBar"></b></i></div>
+                            <div><span>Learned behaviour consistency</span><strong id="trustHumidityLearned">--</strong><i><b id="trustHumidityLearnedBar"></b></i></div>
+                            <div><span>Communication integrity</span><strong id="trustHumidityCommunication">--</strong><i><b id="trustHumidityCommunicationBar"></b></i></div>
+                        </div>
+                    </article>
+
+                    <article class="panel trust-sensor-card" data-trust-sensor="waterTemperature">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Submerged DS18B20</div>
+                                <h3>Water Temperature Sensor</h3>
+                            </div>
+                            <span class="pill unknown" id="trustWaterState">WAITING</span>
+                        </div>
+
+                        <div class="trust-sensor-score">
+                            <span id="trustWaterScore">--</span>
+                            <small>/ 100 trust</small>
+                        </div>
+
+                        <p class="trust-reason" id="trustWaterReason">Waiting for Sensor Trust evidence.</p>
+
+                        <div class="trust-components">
+                            <div><span>Measurement integrity</span><strong id="trustWaterMeasurement">--</strong><i><b id="trustWaterMeasurementBar"></b></i></div>
+                            <div><span>Upstream data quality</span><strong id="trustWaterQuality">--</strong><i><b id="trustWaterQualityBar"></b></i></div>
+                            <div><span>Temporal reliability</span><strong id="trustWaterTemporal">--</strong><i><b id="trustWaterTemporalBar"></b></i></div>
+                            <div><span>Learned behaviour consistency</span><strong id="trustWaterLearned">--</strong><i><b id="trustWaterLearnedBar"></b></i></div>
+                            <div><span>Communication integrity</span><strong id="trustWaterCommunication">--</strong><i><b id="trustWaterCommunicationBar"></b></i></div>
+                            <div><span>Probe-degradation integrity</span><strong id="trustWaterDomain">--</strong><i><b id="trustWaterDomainBar"></b></i></div>
+                        </div>
+                    </article>
+
+                    <article class="panel trust-sensor-card" data-trust-sensor="reservoirDistance">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">HC-SR04</div>
+                                <h3>Reservoir Distance Sensor</h3>
+                            </div>
+                            <span class="pill unknown" id="trustReservoirState">WAITING</span>
+                        </div>
+
+                        <div class="trust-sensor-score">
+                            <span id="trustReservoirScore">--</span>
+                            <small>/ 100 trust</small>
+                        </div>
+
+                        <p class="trust-reason" id="trustReservoirReason">Waiting for Sensor Trust evidence.</p>
+
+                        <div class="trust-components">
+                            <div><span>Measurement integrity</span><strong id="trustReservoirMeasurement">--</strong><i><b id="trustReservoirMeasurementBar"></b></i></div>
+                            <div><span>Upstream data quality</span><strong id="trustReservoirQuality">--</strong><i><b id="trustReservoirQualityBar"></b></i></div>
+                            <div><span>Temporal reliability</span><strong id="trustReservoirTemporal">--</strong><i><b id="trustReservoirTemporalBar"></b></i></div>
+                            <div><span>Learned behaviour consistency</span><strong id="trustReservoirLearned">--</strong><i><b id="trustReservoirLearnedBar"></b></i></div>
+                            <div><span>Communication integrity</span><strong id="trustReservoirCommunication">--</strong><i><b id="trustReservoirCommunicationBar"></b></i></div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="section-grid two-col trust-lower-grid">
+                    <article class="panel trust-fouling-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Domain-specific diagnosis</div>
+                                <h3>Submerged Probe Response Degradation</h3>
+                            </div>
+                            <span class="pill unknown" id="trustFoulingState">WAITING</span>
+                        </div>
+
+                        <p class="trust-explainer">HydroSense does not directly identify algae. It looks for repeated, comparable thermal-response degradation compatible with surface coating, biological fouling, contamination or probe ageing.</p>
+
+                        <div class="trust-fouling-stats">
+                            <div><span>Fouling-compatible evidence</span><strong><span id="trustFoulingEvidence">--</span> / 100</strong></div>
+                            <div><span>Assessment confidence</span><strong><span id="trustFoulingConfidence">--</span> / 100</strong></div>
+                            <div><span>Clean response events</span><strong id="trustFoulingCleanEvents">--</strong></div>
+                            <div><span>Comparable test events</span><strong id="trustFoulingTestEvents">--</strong></div>
+                            <div><span>Response versus clean baseline</span><strong><span id="trustFoulingRelative">--</span>%</strong></div>
+                            <div><span>Rejected non-comparable events</span><strong id="trustFoulingRejected">--</strong></div>
+                        </div>
+
+                        <div class="trust-evidence-list" id="trustFoulingEvidenceList">
+                            <div>
+                                <span class="status-dot unknown"></span>
+                                <span>Waiting for physically eligible thermal-response evidence.</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel trust-anomaly-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Explainable anomaly evidence</div>
+                                <h3>What HydroSense is observing now</h3>
+                            </div>
+                            <span class="pill unknown" id="trustAnomalyOverall">WAITING</span>
+                        </div>
+
+                        <div class="trust-anomaly-list" id="trustAnomalyList">
+                            <div class="trust-anomaly-empty">No anomaly evidence has been received yet.</div>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="panel trust-events-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <div class="eyebrow">MongoDB event history</div>
+                            <h3>Sensor Trust and anomaly transitions</h3>
+                        </div>
+
+                        <button class="ghost-button" id="refreshTrustEventsButton">
+                            Refresh events
+                        </button>
+                    </div>
+
+                    <p class="trust-explainer">Only meaningful state transitions are stored. HydroSense does not write every three-second trust calculation into this event history.</p>
+
+                    <div class="device-table-wrap">
+                        <table class="device-table trust-event-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Sensor</th>
+                                    <th>Severity</th>
+                                    <th>Event</th>
+                                    <th>Trust</th>
+                                    <th>Explanation</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="trustEventTableBody">
+                                <tr>
+                                    <td colspan="6" class="empty-table">
+                                        No Sensor Trust events recorded yet.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SYSTEM HEALTH -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-health">
+                <div class="health-grid">
+                    <article class="panel health-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Platform</div>
+                                <h3>Infrastructure</h3>
+                            </div>
+                        </div>
+
+                        <div class="health-list">
+                            <div><span><i class="status-dot unknown" id="healthApiDot"></i>Backend API</span><strong id="healthApiText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthDbDot"></i>MongoDB</span><strong id="healthDbText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthSocketDot"></i>Socket.IO</span><strong id="healthSocketText">UNKNOWN</strong></div>
+                            <div><span>Backend uptime</span><strong id="backendUptime">--</strong></div>
+                            <div><span>Browser socket clients</span><strong id="socketClients">--</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="panel health-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Device</div>
+                                <h3>Communication</h3>
+                            </div>
+                        </div>
+
+                        <div class="health-list">
+                            <div><span><i class="status-dot unknown" id="healthC3Dot"></i>C3 packet</span><strong id="healthC3Text">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthBleDot"></i>BLE link</span><strong id="healthBleText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthWifiDot"></i>S3 Wi-Fi</span><strong id="healthWifiText">UNKNOWN</strong></div>
+                            <div><span>Packet age</span><strong><span id="healthPacketAge">--</span> ms</strong></div>
+                            <div><span>Sequence</span><strong id="healthSequence">--</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="panel health-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Sensors</div>
+                                <h3>Validity</h3>
+                            </div>
+                        </div>
+
+                        <div class="health-list">
+                            <div><span><i class="status-dot unknown" id="healthDhtDot"></i>DHT22</span><strong id="healthDhtText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthDsDot"></i>DS18B20</span><strong id="healthDsText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthUltrasonicDot"></i>HC-SR04</span><strong id="healthUltrasonicText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthReservoirDot"></i>Reservoir model</span><strong id="healthReservoirText">UNKNOWN</strong></div>
+                            <div><span><i class="status-dot unknown" id="healthCalibrationDot"></i>Calibration</span><strong id="healthCalibrationText">UNKNOWN</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="panel health-card">
+                        <div class="panel-heading">
+                            <div>
+                                <div class="eyebrow">Data path</div>
+                                <h3>Transport diagnostics</h3>
+                            </div>
+                        </div>
+
+                        <div class="health-list">
+                            <div><span>Quality score</span><strong><span id="healthQuality">--</span>%</strong></div>
+                            <div><span>CRC failures</span><strong id="healthCrc">--</strong></div>
+                            <div><span>Wrong packet lengths</span><strong id="healthWrongLengths">--</strong></div>
+                            <div><span>Bad headers</span><strong id="healthBadHeaders">--</strong></div>
+                            <div><span>Bad versions</span><strong id="healthBadVersions">--</strong></div>
+                            <div><span>Queue drops</span><strong id="healthQueueDrops">--</strong></div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- DEVICES -->
+            <!-- ===================================================== -->
+            <section class="view" id="view-devices">
+                <article class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <div class="eyebrow">Registry</div>
+                            <h3>HydroSense devices</h3>
+                        </div>
+
+                        <button class="ghost-button" id="refreshDevicesButton">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="device-table-wrap">
+                        <table class="device-table">
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Runtime</th>
+                                    <th>Quality</th>
+                                    <th>Last sequence</th>
+                                    <th>Last seen</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="deviceTableBody">
+                                <tr>
+                                    <td colspan="5" class="empty-table">Discovering devices…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast hidden" id="toast" role="status"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/control-room/app.js"></script>
+</body>
+</html>

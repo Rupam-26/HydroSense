@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2026 Rupam Mondal
+# SPDX-License-Identifier: MIT
+
+cff-version: 1.2.0
+message: "If you use HydroSense ESP32-C3 in research or a project, please cite it using this metadata."
+title: "HydroSense ESP32-C3 Sensor Node"
+type: software
+
+authors:
+  - family-names: "Mondal"
+    given-names: "Rupam"
+
+abstract: >-
+  HydroSense ESP32-C3 is an embedded sensing and edge-processing
+  firmware component for hydroponic environmental and reservoir
+  monitoring. It integrates DHT22, DS18B20, HC-SR04 and SH1106
+  hardware with sensor validation, ultrasonic correction, robust
+  filtering, reservoir calibration, environmental analytics,
+  sensor-health evaluation, data-quality scoring, local OLED
+  presentation and versioned CRC-protected BLE telemetry.
+
+keywords:
+  - HydroSense
+  - ESP32-C3
+  - hydroponics
+  - embedded systems
+  - Internet of Things
+  - environmental monitoring
+  - reservoir monitoring
+  - Bluetooth Low Energy
+  - PlatformIO
+  - sensor fusion
+
+license: MIT

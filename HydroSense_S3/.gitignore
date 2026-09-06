@@ -1,0 +1,18 @@
+# PlatformIO generated files
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Private configuration — never upload
+include/config/S3Secrets.h
+
+# VS Code generated machine-specific files
+.vscode/.browse.c_cpp.db*
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/ipch/
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
